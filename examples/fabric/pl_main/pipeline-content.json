@@ -1,0 +1,112 @@
+{
+    "properties": {
+      "activities": [
+        {
+          "name": "Read Configuration File",
+          "type": "Lookup",
+          "dependsOn": [],
+          "policy": {
+            "timeout": "0.12:00:00",
+            "retry": 0,
+            "retryIntervalInSeconds": 30,
+            "secureOutput": false,
+            "secureInput": false
+          },
+          "typeProperties": {
+            "source": {
+              "type": "JsonSource",
+              "storeSettings": {
+                "type": "LakehouseReadSettings",
+                "recursive": true,
+                "enablePartitionDiscovery": false
+              },
+              "formatSettings": {
+                "type": "JsonReadSettings"
+              }
+            },
+            "datasetSettings": {
+              "annotations": [],
+              "linkedService": {
+                "name": "testing_framework",
+                "properties": {
+                  "annotations": [],
+                  "type": "Lakehouse",
+                  "typeProperties": {
+                    "workspaceId": "ef9d772e-5c80-406d-a2d7-152df4869fc7",
+                    "artifactId": "d59877e8-821f-4a76-a788-20fdc3ae6f18",
+                    "rootFolder": "Files"
+                  }
+                }
+              },
+              "type": "Json",
+              "typeProperties": {
+                "location": {
+                  "type": "LakehouseLocation",
+                  "fileName": "lh_config.json",
+                  "folderPath": "config"
+                }
+              },
+              "schema": {}
+            }
+          }
+        },
+        {
+          "name": "ForEach",
+          "type": "ForEach",
+          "dependsOn": [
+            {
+              "activity": "Read Configuration File",
+              "dependencyConditions": [
+                "Succeeded"
+              ]
+            }
+          ],
+          "typeProperties": {
+            "items": {
+              "value": "@activity('Read Configuration File').output.firstRow.lakeHouseProperties",
+              "type": "Expression"
+            },
+            "activities": [
+              {
+                "name": "If New Or Updated",
+                "type": "IfCondition",
+                "dependsOn": [],
+                "typeProperties": {
+                  "expression": {
+                    "value": "@or(equals(item().lastUpdatedDatalake,''),greaterOrEquals(item().lastUpdatedSourceSystem,addSeconds(item().lastUpdatedDatalake,-1)))",
+                    "type": "Expression"
+                  },
+                  "ifFalseActivities": [],
+                  "ifTrueActivities": [
+                    {
+                      "name": "Invoke Ingestion Pipeline",
+                      "type": "ExecutePipeline",
+                      "dependsOn": [],
+                      "typeProperties": {
+                        "pipeline": {
+                          "referenceName": "pl_ingestion",
+                          "type": "PipelineReference"
+                        },
+                        "waitOnCompletion": true,
+                        "parameters": {
+                          "dynamicmonth": {
+                            "value": "@item().month",
+                            "type": "Expression"
+                          },
+                          "dynamicyear": {
+                            "value": "@item().year",
+                            "type": "Expression"
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        }
+      ],
+      "annotations": []
+    }
+  }

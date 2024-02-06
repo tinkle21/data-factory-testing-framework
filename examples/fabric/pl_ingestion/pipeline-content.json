@@ -1,0 +1,223 @@
+{
+    "properties": {
+      "activities": [
+        {
+          "name": "Copy NYC Data",
+          "type": "Copy",
+          "dependsOn": [],
+          "policy": {
+            "timeout": "0.12:00:00",
+            "retry": 0,
+            "retryIntervalInSeconds": 30,
+            "secureOutput": false,
+            "secureInput": false
+          },
+          "typeProperties": {
+            "source": {
+              "type": "ParquetSource",
+              "storeSettings": {
+                "type": "HttpReadSettings",
+                "requestMethod": "GET"
+              },
+              "formatSettings": {
+                "type": "ParquetReadSettings"
+              },
+              "datasetSettings": {
+                "annotations": [],
+                "type": "Parquet",
+                "typeProperties": {
+                  "location": {
+                    "type": "HttpServerLocation",
+                    "relativeUrl": {
+                      "value": "@concat('yellow_tripdata_',pipeline().parameters.dynamicyear,'-', pipeline().parameters.dynamicmonth,'.parquet')",
+                      "type": "Expression"
+                    }
+                  },
+                  "compressionCodec": "snappy"
+                },
+                "schema": [
+                  {
+                    "name": "VendorID",
+                    "type": "INT64",
+                    "precision": -1,
+                    "scale": -1
+                  },
+                  {
+                    "name": "tpep_pickup_datetime",
+                    "type": "TIMESTAMP_MICROS",
+                    "precision": -1,
+                    "scale": -1
+                  },
+                  {
+                    "name": "tpep_dropoff_datetime",
+                    "type": "TIMESTAMP_MICROS",
+                    "precision": -1,
+                    "scale": -1
+                  },
+                  {
+                    "name": "passenger_count",
+                    "type": "DOUBLE",
+                    "precision": -1,
+                    "scale": -1
+                  },
+                  {
+                    "name": "trip_distance",
+                    "type": "DOUBLE",
+                    "precision": -1,
+                    "scale": -1
+                  },
+                  {
+                    "name": "RatecodeID",
+                    "type": "DOUBLE",
+                    "precision": -1,
+                    "scale": -1
+                  },
+                  {
+                    "name": "store_and_fwd_flag",
+                    "type": "STRING",
+                    "precision": -1,
+                    "scale": -1
+                  },
+                  {
+                    "name": "PULocationID",
+                    "type": "INT64",
+                    "precision": -1,
+                    "scale": -1
+                  },
+                  {
+                    "name": "DOLocationID",
+                    "type": "INT64",
+                    "precision": -1,
+                    "scale": -1
+                  },
+                  {
+                    "name": "payment_type",
+                    "type": "INT64",
+                    "precision": -1,
+                    "scale": -1
+                  },
+                  {
+                    "name": "fare_amount",
+                    "type": "DOUBLE",
+                    "precision": -1,
+                    "scale": -1
+                  },
+                  {
+                    "name": "extra",
+                    "type": "DOUBLE",
+                    "precision": -1,
+                    "scale": -1
+                  },
+                  {
+                    "name": "mta_tax",
+                    "type": "DOUBLE",
+                    "precision": -1,
+                    "scale": -1
+                  },
+                  {
+                    "name": "tip_amount",
+                    "type": "DOUBLE",
+                    "precision": -1,
+                    "scale": -1
+                  },
+                  {
+                    "name": "tolls_amount",
+                    "type": "DOUBLE",
+                    "precision": -1,
+                    "scale": -1
+                  },
+                  {
+                    "name": "improvement_surcharge",
+                    "type": "DOUBLE",
+                    "precision": -1,
+                    "scale": -1
+                  },
+                  {
+                    "name": "total_amount",
+                    "type": "DOUBLE",
+                    "precision": -1,
+                    "scale": -1
+                  },
+                  {
+                    "name": "congestion_surcharge",
+                    "type": "DOUBLE",
+                    "precision": -1,
+                    "scale": -1
+                  },
+                  {
+                    "name": "airport_fee",
+                    "type": "DOUBLE",
+                    "precision": -1,
+                    "scale": -1
+                  }
+                ],
+                "externalReferences": {
+                  "connection": "21ad484b-ad47-4d9b-8bb5-d3cc1f220120"
+                }
+              }
+            },
+            "sink": {
+              "type": "ParquetSink",
+              "storeSettings": {
+                "type": "LakehouseWriteSettings",
+                "copyBehavior": "PreserveHierarchy"
+              },
+              "formatSettings": {
+                "type": "ParquetWriteSettings",
+                "enableVertiParquet": true
+              },
+              "datasetSettings": {
+                "annotations": [],
+                "linkedService": {
+                  "name": "testing_framework",
+                  "properties": {
+                    "annotations": [],
+                    "type": "Lakehouse",
+                    "typeProperties": {
+                      "workspaceId": "ef9d772e-5c80-406d-a2d7-152df4869fc7",
+                      "artifactId": "d59877e8-821f-4a76-a788-20fdc3ae6f18",
+                      "rootFolder": "Files"
+                    }
+                  }
+                },
+                "type": "Parquet",
+                "typeProperties": {
+                  "location": {
+                    "type": "LakehouseLocation",
+                    "fileName": {
+                      "value": "@concat('yellow_tripdata_',pipeline().parameters.dynamicyear,'-', pipeline().parameters.dynamicmonth,'.parquet')",
+                      "type": "Expression"
+                    },
+                    "folderPath": {
+                      "value": "@concat('nyc_taxi_data','/',pipeline().parameters.dynamicyear,'/',pipeline().parameters.dynamicmonth)",
+                      "type": "Expression"
+                    }
+                  },
+                  "compressionCodec": "snappy"
+                },
+                "schema": []
+              }
+            },
+            "enableStaging": false,
+            "translator": {
+              "type": "TabularTranslator",
+              "typeConversion": true,
+              "typeConversionSettings": {
+                "allowDataTruncation": true,
+                "treatBooleanAsNumber": false
+              }
+            }
+          }
+        }
+      ],
+      "parameters": {
+        "dynamicmonth": {
+          "type": "string"
+        },
+        "dynamicyear": {
+          "type": "string"
+        }
+      },
+      "annotations": []
+    }
+  }
