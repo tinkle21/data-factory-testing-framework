@@ -13,6 +13,18 @@ class DataFactoryRepository:
         """
         self.pipelines = pipelines
 
+    def get_pipeline_by_id(self, id: str) -> Pipeline:
+        """Get a pipeline by id. Throws an exception if the pipeline is not found.
+
+        Args:
+            id: Id of the pipeline.
+        """
+        for pipeline in self.pipelines:
+            if pipeline.id == id:
+                return pipeline
+
+        raise PipelineNotFoundError(f"Pipeline with id: '{id}' not found")
+
     def get_pipeline_by_name(self, name: str) -> Pipeline:
         """Get a pipeline by name. Throws an exception if the pipeline is not found.
 

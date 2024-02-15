@@ -64,6 +64,7 @@ ignore = [
     "Q002",
     "Q003",
     "W191",
+    "A002" # Ignore 'id' attribute shadowing built-in 'id'
 ]
 extend-exclude = ["azure_data_factory_testing_framework/data_factory/generated/**"]
 line-length = 120

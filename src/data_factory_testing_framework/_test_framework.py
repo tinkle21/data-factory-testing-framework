@@ -146,7 +146,8 @@ class TestFramework:
                     activities_iterator = []
                     if isinstance(activity, ExecutePipelineActivity) and self.should_evaluate_child_pipelines:
                         execute_pipeline_activity: ExecutePipelineActivity = activity
-                        pipeline = self.get_pipeline_by_name(
+                        pipeline = self.get_pipeline_by_id(
+                            # Note: in the future they will probably rename this to referenceId for Fabric
                             execute_pipeline_activity.type_properties["pipeline"]["referenceName"],
                         )
                         activities_iterator = execute_pipeline_activity.evaluate_pipeline(
@@ -184,6 +185,17 @@ class TestFramework:
             The pipeline with the given name.
         """
         return self._repository.get_pipeline_by_name(name)
+
+    def get_pipeline_by_id(self, id: str) -> Pipeline:
+        """Gets a pipeline by name.
+
+        Args:
+            name: The id of the pipeline to get.
+
+        Returns:
+            The pipeline with the given id.
+        """
+        return self._repository.get_pipeline_by_id(name)
 
     @staticmethod
     def _is_iteration_activity(activity: Activity) -> bool:
