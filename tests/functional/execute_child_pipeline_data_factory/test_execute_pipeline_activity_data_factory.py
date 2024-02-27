@@ -43,7 +43,7 @@ def test_execute_pipeline_activity_evaluate_child_pipelines_child_pipeline_not_k
         should_evaluate_child_pipelines=True,
     )
     test_framework._repository.pipelines.remove(test_framework._repository.get_pipeline_by_name("child"))
-    pipeline = test_framework._repository.get_pipeline_by_name("main")
+    pipeline = test_framework.get_pipeline_by_name("main")
 
     # Act & Assert
     with pytest.raises(PipelineNotFoundError) as exception_info:

@@ -186,16 +186,16 @@ class TestFramework:
         """
         return self._repository.get_pipeline_by_name(name)
 
-    def get_pipeline_by_id(self, id: str) -> Pipeline:
-        """Gets a pipeline by name.
+    def get_pipeline_by_id(self, id_: str) -> Pipeline:
+        """Get a pipeline by id. Throws an exception if the pipeline is not found.
 
         Args:
-            name: The id of the pipeline to get.
+            id_: The identifier of the pipeline to get.
 
         Returns:
             The pipeline with the given id.
         """
-        return self._repository.get_pipeline_by_id(name)
+        return self._repository.get_pipeline_by_id(id_)
 
     @staticmethod
     def _is_iteration_activity(activity: Activity) -> bool:

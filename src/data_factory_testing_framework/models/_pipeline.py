@@ -10,7 +10,7 @@ from data_factory_testing_framework.state import PipelineRunVariable, RunParamet
 class Pipeline:
     def __init__(
         self,
-        id: str,
+        id_: str,
         name: str,
         activities: List["Activity"],
         **kwargs: Any,  # noqa: ANN401
@@ -18,12 +18,12 @@ class Pipeline:
         """This is the class that represents a pipeline.
 
         Args:
-            id: Identifier of the pipeline.
+            id_: Identifier of the pipeline.
             name: Name of the pipeline.
             activities: List of activities in the pipeline.
             **kwargs: Pipeline properties coming directly from the json representation of the pipeline.
         """
-        self.id = id
+        self.id_ = id_
         self.name = name
         self.parameters: dict = kwargs["parameters"] if "parameters" in kwargs else {}
         self.variables: dict = kwargs["variables"] if "variables" in kwargs else {}
