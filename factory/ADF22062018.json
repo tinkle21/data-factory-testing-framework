@@ -1,0 +1,9 @@
+{
+	"name": "ADF22062018",
+	"location": "australiaeast",
+	"identity": {
+		"type": "SystemAssigned",
+		"principalId": "da95958c-c9ad-4a34-a133-7c689ffdd823",
+		"tenantId": "b9ad097d-f42a-4a12-8868-f53e5ec9456a"
+	}
+}
